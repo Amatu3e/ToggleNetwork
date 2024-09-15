@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/ToggleNetwork/bin/Release/net8.0-windows10.0.17763.0/win-x64
+/ToggleNetwork/obj
+/ToggleNetwork/Properties/PublishProfiles
+/ToggleNetwork.pdb
