@@ -34,32 +34,19 @@ class InternetAdapters
 
 	static bool IsNetworkAdapterEnabled(string adapterName)
 	{
-		var checkStatusPsi = new ProcessStartInfo("powershell", $"-Command \"Get-NetAdapter -Name '{adapterName}'\"")
-		{
-			RedirectStandardOutput = true,
-			UseShellExecute = false,
-			CreateNoWindow = true
-		};
-
+		var checkStatusPsi = CreatePowershellCommand($"-Command \"Get-NetAdapter -Name '{adapterName}'\"");
 		RunProcessWithOutput(checkStatusPsi, out string output);
 		return output.Contains("Up");
 	}
 
 	static void SetNetworkAdapterStatus(string adapterName, string command)
 	{
-		var psi = new ProcessStartInfo("powershell", $"-Command \"{command} -Name '{adapterName}' -Confirm:$false\"")
-		{
-			RedirectStandardOutput = true,
-			UseShellExecute = false,
-			CreateNoWindow = true
-		};
-
-		RunProcess(psi);
+		RunProcess(CreatePowershellCommand($"-Command \"{command} -Name '{adapterName}' -Confirm:$false\""));
 	}
 
 	static void RunProcessWithOutput(ProcessStartInfo psi, out string output)
 	{
-		Process? process = RunProcess(psi);
+		var process = RunProcess(psi);
 		output = process.StandardOutput.ReadToEnd();
 	}
 
@@ -73,6 +60,30 @@ class InternetAdapters
 
 	static List<string> GetNetworkInterfaceList()
 	{
-		return [NetworkAdapters.Ethernet.ToString()];
+		List<string> adapterNames = [];
+
+		var checkStatusPsi = CreatePowershellCommand("-Command \"Get-NetAdapter | Select-Object -ExpandProperty Name\"");
+
+		using(var process = RunProcess(checkStatusPsi))
+		{
+			using var reader = process.StandardOutput;
+			
+			string line;
+			while((line = reader.ReadLine()!) != null)
+			{
+				adapterNames.Add(line);
+			}
+		}
+		return adapterNames;
+	}
+
+	static ProcessStartInfo CreatePowershellCommand(string command)
+	{
+		return new ProcessStartInfo("powershell", command)
+		{
+			RedirectStandardOutput = true,
+			UseShellExecute = false,
+			CreateNoWindow = true
+		};
 	}
 }
