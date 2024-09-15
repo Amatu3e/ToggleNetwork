@@ -4,7 +4,7 @@ This personal project allows users to toggle their network drivers (enable/disab
 
 ### How to Use
 
-1. Download the `ToggleNetwork.exe` file from the Releases section.
+1. Download the `ToggleNetwork.exe` file from the [here!](https://github.com/Amatu3e/ToggleNetwork/blob/master/ToggleNetwork.exe).
 2. Run the EXE file to toggle your network drivers.
 
 ### License
